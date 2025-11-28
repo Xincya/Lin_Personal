@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>历史作品 - 时间轴</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;500&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #0a0a0a; --text: #e0e0e0; --accent: #ff4d00; }
+        body { background: var(--bg); color: var(--text); font-family: 'Cormorant Garamond', serif; padding-bottom: 100px; }
+        a { text-decoration: none; color: inherit; }
+        
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        
+        nav { padding: 30px 0; margin-bottom: 50px; font-family: 'Oswald', sans-serif; text-transform: uppercase; display: flex; justify-content: space-between; }
+        nav a:hover { color: var(--accent); }
+
+        /* 时间轴样式 */
+        .timeline { position: relative; border-left: 2px solid #333; margin-left: 20px; }
+        
+        .timeline-item {
+            margin-bottom: 60px;
+            padding-left: 40px;
+            position: relative;
+        }
+
+        /* 时间轴上的圆点 */
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -6px; /* 调整圆点位置 */
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+
+        .time-date {
+            font-family: 'Oswald', sans-serif;
+            color: var(--accent);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .work-card {
+            background: #111;
+            padding: 15px;
+            border: 1px solid #222;
+            transition: transform 0.3s;
+        }
+
+        .work-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+
+        .work-img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            background-color: #333; /* 占位色 */
+            display: block;
+        }
+        
+        .work-title { font-size: 1.5rem; margin-top: 15px; color: #fff; }
+        .work-desc { color: #888; font-size: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a href="index.html">← 返回首页</a>
+            <span>HISTORY WORKS</span>
+        </nav>
+
+        <div class="timeline">
+            
+            <div class="timeline-item">
+                <div class="time-date">2023年 12月</div>
+                <div class="work-card">
+                    <a href="#" target="_blank">
+                        <img src="https://via.placeholder.com/800x400" class="work-img" alt="作品预览">
+                        <h3 class="work-title">冬日的素描</h3>
+                        <p class="work-desc">这是我在去年冬天创作的一幅练习...</p>
+                    </a>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="time-date">2023年 08月</div>
+                <div class="work-card">
+                    <a href="#">
+                        <img src="https://via.placeholder.com/800x400" class="work-img" alt="作品预览">
+                        <h3 class="work-title">夏夜 Video Art</h3>
+                        <p class="work-desc">点击上方图片观看视频（需替换链接）</p>
+                    </a>
+                </div>
+            </div>
+
+            </div>
+    </div>
+</body>
+</html>
