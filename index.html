@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的个人主页</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --text-color: #e0e0e0;
+            --accent-color: #ff4d00; /* 【替换】如果你想要其他强调色，改这里，比如 #ccff00 */
+            --font-title: 'Oswald', sans-serif; /* 更改为修长字体 */
+            --font-body: 'Cormorant Garamond', serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-body);
+            line-height: 1.6;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        a:hover { color: var(--accent-color); }
+
+        /* 布局容器 */
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+        /* 导航栏 */
+        nav {
+            padding: 30px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--font-title);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .nav-links a { margin-left: 20px; font-weight: 500; }
+
+        /* Hero 区域 */
+        .hero {
+            height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero h1 {
+            font-family: var(--font-title);
+            font-size: 5rem; /* 字体改小了一些 */
+            font-weight: 500; 
+            line-height: 1.1;
+            text-transform: uppercase;
+            letter-spacing: 1px; /* 稍微增加字间距 */
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-top: 20px;
+            color: #888;
+            max-width: 500px;
+        }
+
+        /* 评论区样式 */
+        .comments-section {
+            margin: 100px 0;
+            padding-top: 50px;
+            border-top: 1px solid #333;
+        }
+
+        .comment-form { margin-bottom: 40px; }
+        .comment-form input, .comment-form textarea {
+            width: 100%;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-family: var(--font-body);
+        }
+        .btn {
+            background: var(--accent-color);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-family: var(--font-title);
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .comment-item {
+            background: #111;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 3px solid var(--accent-color);
+        }
+        .comment-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; color: #888; }
+        .comment-body { font-size: 1.1rem; }
+        .comment-actions { margin-top: 10px; font-size: 0.8rem; display: flex; gap: 15px; }
+        .action-btn { cursor: pointer; color: #666; }
+        .action-btn:hover { color: #fff; }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <nav>
+            <div class="logo">ARTIST.NAME</div> 
+            <div class="nav-links">
+                <a href="index.html" style="color:var(--accent-color)">首页</a>
+                <a href="history.html">历史作品</a>
+                <a href="copy.html">临摹作品</a>
+            </div>
+        </nav>
+
+        <section class="hero">
+            <h1>
+                Visual Art<br>
+                <span style="color: var(--accent-color)">PortFolio</span><br>
+                2024
+            </h1>
+            <p>这里是我的个人小站。点击右上角的链接查看我的历史创作和临摹练习。</p>
+        </section>
+
+        <section class="comments-section">
+            <h2 style="font-family: var(--font-title); margin-bottom: 20px;">公共评论区</h2>
+            
+            <div class="comment-form">
+                <input type="text" id="username" placeholder="你的昵称...">
+                <textarea id="usercomment" rows="3" placeholder="写下你的评论..."></textarea>
+                <button class="btn" onclick="addComment()">发送评论</button>
+            </div>
+
+            <div id="comment-list">
+                </div>
+        </section>
+    </div>
+
+    <script>
+        // --- 评论区逻辑 (模拟) ---
+        
+        // 初始数据
+        const initialComments = [
+            { id: 1, name: "AI User", content: "测试用。", likes: 2, date: "2024-01-01" }
+        ];
+
+        // 从本地存储获取评论，如果没有，就用初始数据
+        function loadComments() {
+            let stored = localStorage.getItem('mySiteComments');
+            if (!stored) {
+                return initialComments;
+            }
+            return JSON.parse(stored);
+        }
+
+        let comments = loadComments();
+
+        function renderComments() {
+            const list = document.getElementById('comment-list');
+            list.innerHTML = ''; // 清空
+
+            comments.forEach((c, index) => {
+                const item = document.createElement('div');
+                item.className = 'comment-item';
+                item.innerHTML = `
+                    <div class="comment-header">
+                        <span>${c.name}</span>
+                        <span>${c.date}</span>
+                    </div>
+                    <div class="comment-body">${c.content}</div>
+                    <div class="comment-actions">
+                        <span class="action-btn" onclick="likeComment(${index})">♥ 点赞 (${c.likes})</span>
+                        <span class="action-btn" onclick="deleteComment(${index})">删除</span>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function addComment() {
+            const nameInput = document.getElementById('username');
+            const commentInput = document.getElementById('usercomment');
+            
+            if(nameInput.value === '' || commentInput.value === '') {
+                alert("请输入昵称和内容");
+                return;
+            }
+
+            const newComment = {
+                id: Date.now(),
+                name: nameInput.value,
+                content: commentInput.value,
+                likes: 0,
+                date: new Date().toLocaleDateString()
+            };
+
+            comments.unshift(newComment); // 加到最前面
+            saveAndRender();
+            
+            // 清空输入框
+            nameInput.value = '';
+            commentInput.value = '';
+        }
+
+        function deleteComment(index) {
+            // 简单的模拟权限确认
+            const name = comments[index].name;
+            // 只有当前是"我"或者评论者是"我"才能删 (这里用弹窗简单模拟)
+            if(confirm(`确定要删除 ${name} 的这条评论吗？`)) {
+                comments.splice(index, 1);
+                saveAndRender();
+            }
+        }
+
+        function likeComment(index) {
+            comments[index].likes += 1;
+            saveAndRender();
+        }
+
+        function saveAndRender() {
+            localStorage.setItem('mySiteComments', JSON.stringify(comments));
+            renderComments();
+        }
+
+        // 页面加载时运行
+        renderComments();
+    </script>
+</body>
+</html>
