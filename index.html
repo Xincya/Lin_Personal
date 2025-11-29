@@ -9,33 +9,74 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
     <style>
         :root {
             --bg-color: #0a0a0a;
             --text-color: #e0e0e0;
-            --accent-color: #ff4d00; /* 【替换】如果你想要其他强调色，改这里，比如 #ccff00 */
-            --font-title: 'Oswald', sans-serif; /* 更改为修长字体 */
+            --accent-color: #ff4d00; 
+            --font-title: 'Oswald', sans-serif;
             --font-body: 'Cormorant Garamond', serif;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; /* 隐藏默认鼠标 */ }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
             font-family: var(--font-body);
             line-height: 1.6;
+            overflow-x: hidden; /* 防止滚动条出现 */
         }
 
-        a { text-decoration: none; color: inherit; transition: 0.3s; }
-        a:hover { color: var(--accent-color); }
+        a { text-decoration: none; color: inherit; transition: 0.3s; cursor: none; }
+        
+        /* --- 1. 鼠标交互小球 --- */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 1px solid var(--accent-color);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none; /* 让鼠标能透过圆圈点击 */
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background 0.3s;
+            mix-blend-mode: difference;
+        }
+        .cursor.hovered {
+            width: 50px;
+            height: 50px;
+            background: var(--accent-color);
+            opacity: 0.5;
+            border: none;
+        }
 
         /* 布局容器 */
         .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
 
+        /* --- 2. 顶部状态栏 (点赞+浏览量) --- */
+        .top-bar {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            z-index: 100;
+            display: flex;
+            gap: 20px;
+            font-family: var(--font-title);
+            font-size: 0.9rem;
+            background: rgba(0,0,0,0.5);
+            padding: 5px 15px;
+            border-radius: 20px;
+            border: 1px solid #333;
+        }
+        .like-btn { cursor: none; }
+        .like-btn:hover { color: var(--accent-color); }
+
         /* 导航栏 */
         nav {
-            padding: 30px 0;
+            padding: 40px 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -43,12 +84,12 @@
             text-transform: uppercase;
             letter-spacing: 2px;
         }
-
         .nav-links a { margin-left: 20px; font-weight: 500; }
+        .nav-links a:hover { color: var(--accent-color); }
 
         /* Hero 区域 */
         .hero {
-            height: 70vh;
+            height: 60vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -56,18 +97,34 @@
 
         .hero h1 {
             font-family: var(--font-title);
-            font-size: 5rem; /* 字体改小了一些 */
+            font-size: 5rem;
             font-weight: 500; 
             line-height: 1.1;
             text-transform: uppercase;
-            letter-spacing: 1px; /* 稍微增加字间距 */
+            letter-spacing: 1px;
         }
-
-        .hero p {
-            font-size: 1.2rem;
-            margin-top: 20px;
-            color: #888;
-            max-width: 500px;
+        
+        /* --- 3. 滚动文字条 --- */
+        .marquee-container {
+            width: 100%;
+            overflow: hidden;
+            background: var(--accent-color);
+            color: #000;
+            padding: 10px 0;
+            margin: 50px 0;
+            font-family: var(--font-title);
+            font-weight: bold;
+            font-size: 1.5rem;
+            transform: rotate(-2deg); /* 稍微倾斜一点增加艺术感 */
+        }
+        .marquee-content {
+            white-space: nowrap;
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
         }
 
         /* 评论区样式 */
@@ -76,8 +133,6 @@
             padding-top: 50px;
             border-top: 1px solid #333;
         }
-
-        .comment-form { margin-bottom: 40px; }
         .comment-form input, .comment-form textarea {
             width: 100%;
             background: #1a1a1a;
@@ -86,41 +141,47 @@
             padding: 10px;
             margin-bottom: 10px;
             font-family: var(--font-body);
+            cursor: none; /* 输入框内也保持自定义鼠标 */
         }
         .btn {
             background: var(--accent-color);
             color: #000;
             border: none;
             padding: 10px 20px;
-            cursor: pointer;
             font-family: var(--font-title);
             font-weight: bold;
             text-transform: uppercase;
         }
-
         .comment-item {
             background: #111;
             padding: 20px;
             margin-bottom: 15px;
             border-left: 3px solid var(--accent-color);
         }
-        .comment-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; color: #888; }
-        .comment-body { font-size: 1.1rem; }
-        .comment-actions { margin-top: 10px; font-size: 0.8rem; display: flex; gap: 15px; }
-        .action-btn { cursor: pointer; color: #666; }
-        .action-btn:hover { color: #fff; }
-
     </style>
 </head>
 <body>
 
+    <div class="cursor"></div>
+
+    <div class="top-bar">
+        <div title="总浏览量">
+            👁 <span id="busuanzi_value_site_pv">Loading...</span>
+        </div>
+        <div class="like-btn hover-trigger" onclick="toggleGlobalLike()">
+            <span id="like-icon">♡</span> 
+            <span id="global-like-count">0</span>
+        </div>
+    </div>
+
     <div class="container">
         <nav>
-            <div class="logo">ARTIST.NAME</div> 
+            <div class="logo hover-trigger">ARTIST.NAME</div> 
             <div class="nav-links">
-                <a href="index.html" style="color:var(--accent-color)">首页</a>
-                <a href="history.html">历史作品</a>
-                <a href="copy.html">临摹作品</a>
+                <a href="index.html" style="color:var(--accent-color)" class="hover-trigger">首页</a>
+                <a href="history.html" class="hover-trigger">历史作品</a>
+                <a href="copy.html" class="hover-trigger">临摹作品</a>
+                <a href="library.html" class="hover-trigger">电子书库</a>
             </div>
         </nav>
 
@@ -130,110 +191,102 @@
                 <span style="color: var(--accent-color)">PortFolio</span><br>
                 2024
             </h1>
-            <p>这里是我的个人小站。点击右上角的链接查看我的历史创作和临摹练习。</p>
+            <p>这里是我的个人小站。欢迎点击右上角的链接查看我的创作。</p>
         </section>
+    </div>
 
+    <div class="marquee-container hover-trigger">
+        <div class="marquee-content">
+            WELCOME TO MY WORLD — DESIGN — ART — CODING — WELCOME TO MY WORLD — DESIGN — ART — CODING — 
+        </div>
+    </div>
+
+    <div class="container">
         <section class="comments-section">
-            <h2 style="font-family: var(--font-title); margin-bottom: 20px;">公共评论区</h2>
+            <h2 style="font-family: var(--font-title); margin-bottom: 20px;">公共评论区 (Demo)</h2>
+            <div style="font-size: 0.8em; color: #666; margin-bottom: 20px;">
+                *注：由于是GitHub静态页面，目前的评论仅保存在您的浏览器本地，其他人无法查看。要实现全网可见评论需接入第三方服务(如Giscus)。
+            </div>
             
             <div class="comment-form">
-                <input type="text" id="username" placeholder="你的昵称...">
-                <textarea id="usercomment" rows="3" placeholder="写下你的评论..."></textarea>
-                <button class="btn" onclick="addComment()">发送评论</button>
+                <input type="text" id="username" placeholder="你的昵称..." class="hover-trigger">
+                <textarea id="usercomment" rows="3" placeholder="写下你的评论..." class="hover-trigger"></textarea>
+                <button class="btn hover-trigger" onclick="addComment()">发送评论</button>
             </div>
-
-            <div id="comment-list">
-                </div>
+            <div id="comment-list"></div>
         </section>
     </div>
 
     <script>
-        // --- 评论区逻辑 (模拟) ---
-        
-        // 初始数据
-        const initialComments = [
-            { id: 1, name: "AI User", content: "测试用。", likes: 2, date: "2024-01-01" }
-        ];
+        // --- 1. 鼠标交互逻辑 ---
+        const cursor = document.querySelector('.cursor');
+        const triggers = document.querySelectorAll('.hover-trigger, a, button, input, textarea');
 
-        // 从本地存储获取评论，如果没有，就用初始数据
-        function loadComments() {
-            let stored = localStorage.getItem('mySiteComments');
-            if (!stored) {
-                return initialComments;
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        triggers.forEach(item => {
+            item.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            item.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+
+        // --- 2. 全站点赞逻辑 (带限制) ---
+        let likeCount = localStorage.getItem('siteGlobalLikes') ? parseInt(localStorage.getItem('siteGlobalLikes')) : 128; // 初始假数据128
+        let hasLiked = localStorage.getItem('userHasLiked') === 'true';
+        
+        const likeIcon = document.getElementById('like-icon');
+        const likeDisplay = document.getElementById('global-like-count');
+
+        function updateLikeUI() {
+            likeDisplay.innerText = likeCount;
+            if(hasLiked) {
+                likeIcon.innerText = '♥';
+                likeIcon.style.color = 'var(--accent-color)';
+            } else {
+                likeIcon.innerText = '♡';
+                likeIcon.style.color = 'inherit';
             }
-            return JSON.parse(stored);
         }
 
-        let comments = loadComments();
+        function toggleGlobalLike() {
+            if (hasLiked) {
+                alert("你已经点过赞了，谢谢支持！");
+                return;
+            }
+            likeCount++;
+            hasLiked = true;
+            localStorage.setItem('siteGlobalLikes', likeCount);
+            localStorage.setItem('userHasLiked', 'true');
+            updateLikeUI();
+        }
+        updateLikeUI();
+
+        // --- 3. 评论区逻辑 (保持不变，含AI测试) ---
+        const initialComments = [{ id: 1, name: "AI User", content: "测试用。", likes: 2, date: "2024-01-01" }];
+        let comments = localStorage.getItem('mySiteComments') ? JSON.parse(localStorage.getItem('mySiteComments')) : initialComments;
 
         function renderComments() {
             const list = document.getElementById('comment-list');
-            list.innerHTML = ''; // 清空
-
-            comments.forEach((c, index) => {
-                const item = document.createElement('div');
-                item.className = 'comment-item';
-                item.innerHTML = `
-                    <div class="comment-header">
-                        <span>${c.name}</span>
-                        <span>${c.date}</span>
-                    </div>
-                    <div class="comment-body">${c.content}</div>
-                    <div class="comment-actions">
-                        <span class="action-btn" onclick="likeComment(${index})">♥ 点赞 (${c.likes})</span>
-                        <span class="action-btn" onclick="deleteComment(${index})">删除</span>
-                    </div>
-                `;
-                list.appendChild(item);
+            list.innerHTML = '';
+            comments.forEach((c) => {
+                list.innerHTML += `
+                    <div class="comment-item">
+                        <div style="color:#888; font-size:0.8rem; margin-bottom:5px;">${c.name} | ${c.date}</div>
+                        <div>${c.content}</div>
+                    </div>`;
             });
         }
-
         function addComment() {
-            const nameInput = document.getElementById('username');
-            const commentInput = document.getElementById('usercomment');
-            
-            if(nameInput.value === '' || commentInput.value === '') {
-                alert("请输入昵称和内容");
-                return;
-            }
-
-            const newComment = {
-                id: Date.now(),
-                name: nameInput.value,
-                content: commentInput.value,
-                likes: 0,
-                date: new Date().toLocaleDateString()
-            };
-
-            comments.unshift(newComment); // 加到最前面
-            saveAndRender();
-            
-            // 清空输入框
-            nameInput.value = '';
-            commentInput.value = '';
-        }
-
-        function deleteComment(index) {
-            // 简单的模拟权限确认
-            const name = comments[index].name;
-            // 只有当前是"我"或者评论者是"我"才能删 (这里用弹窗简单模拟)
-            if(confirm(`确定要删除 ${name} 的这条评论吗？`)) {
-                comments.splice(index, 1);
-                saveAndRender();
-            }
-        }
-
-        function likeComment(index) {
-            comments[index].likes += 1;
-            saveAndRender();
-        }
-
-        function saveAndRender() {
+            const name = document.getElementById('username').value;
+            const content = document.getElementById('usercomment').value;
+            if(!name || !content) return;
+            comments.unshift({ id: Date.now(), name, content, likes: 0, date: new Date().toLocaleDateString() });
             localStorage.setItem('mySiteComments', JSON.stringify(comments));
             renderComments();
+            document.getElementById('usercomment').value = '';
         }
-
-        // 页面加载时运行
         renderComments();
     </script>
 </body>
