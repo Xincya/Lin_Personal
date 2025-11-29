@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的电子书库</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;500&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #0a0a0a; --text: #e0e0e0; --accent: #ff4d00; }
+        body { background: var(--bg); color: var(--text); font-family: 'Cormorant Garamond', serif; padding-bottom: 50px; }
+        a { text-decoration: none; color: inherit; }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        nav { padding: 30px 0; font-family: 'Oswald', sans-serif; text-transform: uppercase; border-bottom: 1px solid #333; margin-bottom: 40px;}
+        nav a:hover { color: var(--accent); }
+
+        /* 书库布局 */
+        .library-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr; /* 左边书单，右边笔记 */
+            gap: 50px;
+        }
+
+        /* 左侧：书单 */
+        .book-item {
+            background: #111;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #333;
+            transition: 0.3s;
+        }
+        .book-item:hover { border-color: var(--accent); }
+        .book-title { font-size: 1.4rem; color: #fff; margin-bottom: 10px; font-family: 'Oswald', sans-serif; }
+        .book-meta { color: #666; font-size: 0.9rem; margin-bottom: 15px; }
+        
+        .read-btn {
+            display: inline-block;
+            padding: 8px 15px;
+            background: #222;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+        .read-btn:hover { background: var(--accent); color: #000; }
+
+        /* 右侧：笔记 */
+        .notes-section {
+            border-left: 1px solid #333;
+            padding-left: 40px;
+        }
+        .note-block { margin-bottom: 50px; }
+        .note-title { font-size: 2rem; color: var(--accent); margin-bottom: 20px; font-family: 'Oswald', sans-serif;}
+        .note-content { font-size: 1.1rem; line-height: 1.8; color: #ccc; }
+        .quote {
+            border-left: 3px solid var(--accent);
+            padding-left: 20px;
+            margin: 20px 0;
+            color: #fff;
+            font-style: italic;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a href="index.html">← 返回首页</a>
+            <span style="float:right">LIBRARY & NOTES</span>
+        </nav>
+
+        <div class="library-grid">
+            
+            <div class="book-list">
+                <h2 style="margin-bottom: 30px; font-family:'Oswald'">书籍列表</h2>
+
+                <div class="book-item">
+                    <div class="book-title">书名：设计心理学</div>
+                    <div class="book-meta">格式：PDF | 上传日期：2024.01</div>
+                    <a href="pdfs/design_book.pdf" target="_blank" class="read-btn">在线阅读 / 下载</a>
+                </div>
+
+                <div class="book-item">
+                    <div class="book-title">书名：艺术的故事</div>
+                    <div class="book-meta">格式：PDF | 上传日期：2024.02</div>
+                    <a href="pdfs/art_story.pdf" target="_blank" class="read-btn">在线阅读 / 下载</a>
+                </div>
+
+                </div>
+
+            <div class="notes-section">
+                <div class="note-block">
+                    <h3 class="note-title">关于《设计心理学》的思考</h3>
+                    <div class="note-content">
+                        <p>这周重读了这本书，对于“诺曼门”的概念有了新的理解。设计不仅仅是美观，更是解决问题的功能性表达...</p>
+                        <div class="quote">
+                            "好的设计是看不见的。"
+                        </div>
+                        <p>（你可以在代码里把这些文字替换成你自己的读书笔记。因为没有后台，你必须每次有新想法时，打开这个 html 文件，把字打进去，然后更新到 GitHub。）</p>
+                    </div>
+                </div>
+
+                <div class="note-block">
+                    <h3 class="note-title">随笔：数字与艺术</h3>
+                    <div class="note-content">
+                        <p>最近在思考代码与画布的关系...</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
